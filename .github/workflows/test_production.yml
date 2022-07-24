@@ -1,6 +1,10 @@
 name: Build and Test React Application
 
-on: [push, pull_request]
+on: 
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
 
 jobs:
   build_test:
@@ -8,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [17.x]
+        node-version: [16.x, 17.x]
 
     steps:
       - uses: actions/checkout@v2
@@ -16,9 +20,12 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Install dev depedency
+      - name: Install depedency
+        run: 
+          npm ci
+      - name : Build project
         run:
-          npm install
-      - name: Run test
+          npm run build --if-present
+      - name : Test project
         run:
           npm test      
